@@ -37,7 +37,7 @@ public class ProductController : ControllerBase
         try 
         {
             productService.CreateProduct(dto.Title, dto.Description, dto.Category, dto.Size, dto.Color, dto.Price);
-            return Ok("Product" + dto.Title + "added");
+            return Ok("Product " + dto.Title + " added");
         }
         catch (ArgumentException)
         {

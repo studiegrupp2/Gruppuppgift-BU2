@@ -6,3 +6,6 @@ public class User : IdentityUser
 {
     public List<Product> Cart = new List<Product>();
 }
+
+
+
