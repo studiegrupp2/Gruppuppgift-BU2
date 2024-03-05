@@ -1,9 +1,10 @@
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Gruppuppgift_BU2;
 
-public class ProductService 
+public class ProductService
 {
     private ApplicationContext context;
 
@@ -21,9 +22,9 @@ public class ProductService
 
     public List<Product> GetAllProducts()
     {
-       return context.Products.ToList();
+        return context.Products.Include(product => product.Reviews).ToList();
     }
-    
+
     // public Product AddRating(int id, double rating)
     // {
     //     Product? product = context.Products.Find(id);
@@ -35,23 +36,30 @@ public class ProductService
     //     context.SaveChanges();
     // return product;
     // }
-    
 
-    public Product AddReview(string review, int id, string name)
+
+    public Review AddReview(string review, string userId, int productId)
     {
-        Product? product = context.Products.Find(id);
+        // Product? product = context.Products.Find(product.id);
+        Product? product = context.Products.Find(productId);
+        User? user = context.Users.Find(userId);
+        
         if (product == null)
         {
             throw new ArgumentException("Product not found.");
         }
-        Review _review = new Review(review, name);
+        if (user == null)
+        {
+            throw new ArgumentException("User not found");
+        }
+        Review _review = new Review(review, user, product);
         // _review.
         context.Reviews.Add(_review);
         // product.Reviews.Add(_review);
         // context.Products.Update(product);
 
         context.SaveChanges();
-        
-        return product;
+
+        return _review;
     }
 }

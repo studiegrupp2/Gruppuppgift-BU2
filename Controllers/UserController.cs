@@ -20,14 +20,40 @@ public class RatingDto
     }
 }
 
+public class ProductDto
+{
+    public string Title {get; set;}
+    public string Description { get; set;}
+    public string Category {get; set;}
+    public string Size {get; set;}
+    public string Color {get; set;}
+    public double Price {get; set;}
+    public double Rating {get; set;}
+    public List<ReviewDto> Reviews { get; set; }
+
+    public ProductDto(Product product)
+    {
+        this.Title = product.Title;
+        this.Description = product.Description;
+        this.Category = product.Category;
+        this.Size = product.Size;
+        this.Color = product.Color;
+        this.Price = product.Price;
+        this.Rating = product.Rating;
+        this.Reviews = product.Reviews.Select(review => new ReviewDto(review)).ToList();
+    }
+}
+
 public class ReviewDto
 {
-    public string Review { get; set; }
+    public string inputReview { get; set; }
+    public User user { get; set; }
 
-    public ReviewDto(string review)
+    public ReviewDto(Review review)
     {
-        this.Review = review;
+        this.inputReview = review.UserReview;
     }
+    public ReviewDto() { }
 }
 
 [ApiController]
@@ -37,28 +63,44 @@ public class CustomerController : ControllerBase
     private ProductService productService;
     RoleManager<IdentityRole> roleManager;
     UserManager<User> userManager;
+    private ApplicationContext context;
 
-    public CustomerController(ProductService productService, RoleManager<IdentityRole> roleManager, UserManager<User> userManager )
+    public CustomerController(ProductService productService, RoleManager<IdentityRole> roleManager, UserManager<User> userManager, ApplicationContext context)
     {
         this.productService = productService;
         this.roleManager = roleManager;
         this.userManager = userManager;
+        this.context = context;
     }
 
     [HttpGet("products")]
     [Authorize]
     public IActionResult GetAllProducts()
     {
-        return Ok(productService.GetAllProducts());
+        List<ProductDto> productDtos = productService.GetAllProducts().Select(product => new ProductDto(product)).ToList();
+        return Ok(productDtos);
     }
 
     [HttpPost("product/{id}")]
     [Authorize]
     public IActionResult PostReview([FromBody] ReviewDto dto, int id)
     {
-        string? name = User.FindFirstValue(ClaimTypes.Name);
-        string review = dto.Review;
-        return Ok(productService.AddReview(review, id, name));
+        int productId = id;
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Review _review = productService.AddReview(dto.inputReview, userId, productId);
+
+        ReviewDto output = new ReviewDto(_review);
+        return Ok(output);
+
+        // ---
+        //string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //User? user = context.Users.Find(userId);
+       // string reviewInput = dto.inputReview;
+
+        //Review _review = productService.AddReview(reviewInput, user, product);
+
+        // ReviewDto output = new ReviewDto(_review);
+        // return Ok(output);
     }
-  
+
 }

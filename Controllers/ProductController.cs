@@ -10,6 +10,7 @@ public class CreateProductDto
     public string Size {get; set;}
     public string Color {get; set;}
     public double Price {get; set;}
+    
     public CreateProductDto(string title, string description, string category, string size, string color, double price)
     {
         this.Title = title;

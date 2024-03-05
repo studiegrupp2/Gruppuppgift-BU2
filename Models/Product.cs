@@ -23,6 +23,7 @@ public class Product
         this.Color = color;
         this.Price = price;
         this.Rating = 0.0;
+        this.Reviews = Reviews;
     }
 }
 
@@ -30,14 +31,15 @@ public class Review
 {
     public int Id {get; set;}
     public string UserReview {get; set;}
-    public string UserName {get; set;}
+    public User User {get; set;}
     // public int ProductId { get; set; }
-    // public Product Product {get; set;}
+    public Product Product {get; set;}
 
     public Review() { }
-    public Review(string userReview, string userName) {
+    public Review(string userReview, User user, Product product) {
         this.UserReview = userReview;
-        this.UserName = userName;
+        this.User = user;
+        this.Product = product;
         //this.User = user;
     }
 }

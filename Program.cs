@@ -13,7 +13,7 @@ public class Program
 
         builder.Services.AddDbContext<ApplicationContext>(options =>
             options.UseNpgsql(
-                "Host=localhost;Database=Ecommerce;Username=postgres;Password=ecommerce"
+                "Host=localhost;Database=Ecommerce;Username=postgres;Password=password"
             )
         );
 
@@ -36,7 +36,7 @@ public class Program
                 }
             );
         });
-        
+
         builder.Services.AddScoped<ProductService>();
 
         builder.Services.AddEndpointsApiExplorer();
