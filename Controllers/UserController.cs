@@ -47,12 +47,12 @@ public class ProductDto
 public class ReviewDto
 {
     public string inputReview { get; set; }
-    public User user { get; set; }
+    public string? inputName { get; set; }
 
     public ReviewDto(Review review)
     {
         this.inputReview = review.UserReview;
-        this.user = review.User;
+        this.inputName = review.User.UserName; 
     }
     public ReviewDto() { }
 }
