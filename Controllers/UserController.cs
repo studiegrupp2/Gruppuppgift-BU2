@@ -52,6 +52,7 @@ public class ReviewDto
     public ReviewDto(Review review)
     {
         this.inputReview = review.UserReview;
+        this.user = review.User;
     }
     public ReviewDto() { }
 }
