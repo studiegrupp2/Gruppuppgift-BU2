@@ -2880,24 +2880,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Christian\\.nuget\\packages\\": {}
+    "/Users/isakgunnardo/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Christian\\Desktop\\Backend 2\\Grupparbete\\Gruppuppgift-BU2\\Gruppuppgift-BU2.csproj",
+      "projectUniqueName": "/Users/isakgunnardo/Ecutbildning/backend2/Gruppuppgift-BU2/Gruppuppgift-BU2.csproj",
       "projectName": "Gruppuppgift-BU2",
-      "projectPath": "C:\\Users\\Christian\\Desktop\\Backend 2\\Grupparbete\\Gruppuppgift-BU2\\Gruppuppgift-BU2.csproj",
-      "packagesPath": "C:\\Users\\Christian\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Christian\\Desktop\\Backend 2\\Grupparbete\\Gruppuppgift-BU2\\obj\\",
+      "projectPath": "/Users/isakgunnardo/Ecutbildning/backend2/Gruppuppgift-BU2/Gruppuppgift-BU2.csproj",
+      "packagesPath": "/Users/isakgunnardo/.nuget/packages/",
+      "outputPath": "/Users/isakgunnardo/Ecutbildning/backend2/Gruppuppgift-BU2/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Christian\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/isakgunnardo/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2910,11 +2911,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -2963,7 +2959,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

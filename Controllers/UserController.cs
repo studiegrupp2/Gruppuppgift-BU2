@@ -108,5 +108,5 @@ public class CustomerController : ControllerBase
         Rating rating = productService.AddRating(productId, userRating);
         return Ok("Rating submitted succefully.");
     }
-
+//hgej
 }
