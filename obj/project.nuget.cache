@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "o2HtXRkdPW1konAHREWupXzfqOu1XmQuOPl4cdpMT9vD5T5ic1AKkFg9vxdWjYVcmRRGoP2C0/cRjgUW0rG+hA==",
+  "dgSpecHash": "KdDZkLPey26bl0IY5Qi9FBHeyOfjpGfC7TS3FnHGfV1o/o3XyTOa4UuoFiKZr3uSM5UyLyDwNX/q4h390lxL9Q==",
   "success": true,
-  "projectFilePath": "/Users/isakgunnardo/Ecutbildning/backend2/Gruppuppgift-BU2/Gruppuppgift-BU2.csproj",
+  "projectFilePath": "/Users/isakgunnardo/Ecutbildning/backend2/projekt/Gruppuppgift-BU2/Gruppuppgift-BU2.csproj",
   "expectedPackageFiles": [
     "/Users/isakgunnardo/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/isakgunnardo/.nuget/packages/microsoft.aspnetcore.cryptography.internal/8.0.2/microsoft.aspnetcore.cryptography.internal.8.0.2.nupkg.sha512",
