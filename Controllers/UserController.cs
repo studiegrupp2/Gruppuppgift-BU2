@@ -8,8 +8,6 @@ using System;
 using Microsoft.AspNetCore.Identity;
 
 
-// public class CreateUser{}
-
 public class RatingDto
 {
     double Rating { get; set; }
@@ -29,7 +27,6 @@ public class ProductDto
     public string Color {get; set;}
     public double Price {get; set;}
     public double AverageRating {get; set;}
-    // public double Rating { get; set; }
     public List<ReviewDto> Reviews { get; set; }
 
     public ProductDto(Product product)
@@ -41,7 +38,6 @@ public class ProductDto
         this.Color = product.Color;
         this.Price = product.Price;
         this.AverageRating = product.AverageRating();
-        // this.Rating = product.Rating;
         this.Reviews = product.Reviews.Select(review => new ReviewDto(review)).ToList();
     }
 }
@@ -108,5 +104,5 @@ public class CustomerController : ControllerBase
         Rating rating = productService.AddRating(productId, userRating);
         return Ok("Rating submitted succefully.");
     }
-//hgej
+
 }

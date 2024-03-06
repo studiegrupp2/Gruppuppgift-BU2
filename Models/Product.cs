@@ -37,7 +37,6 @@ public class Product
         this.Color = color;
         this.Price = price;
         this.ratingList = ratingList;
-
         this.Reviews = Reviews;
     }
 }
@@ -47,8 +46,6 @@ public class Review
     public int Id { get; set; }
     public string UserReview { get; set; }
     public User User { get; set; }
-
-
     public Product Product { get; set; }
 
     public Review() { }
@@ -58,11 +55,8 @@ public class Review
         this.UserReview = userReview;
         this.User = user;
         this.Product = product;
-
     }
 }
-
-
 
 public class Rating
 {
