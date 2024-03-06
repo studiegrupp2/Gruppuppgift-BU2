@@ -1,12 +1,11 @@
 namespace Gruppuppgift_BU2;
 
+using System;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using Microsoft.AspNetCore.Identity;
-
+using Microsoft.AspNetCore.Mvc;
 
 public class RatingDto
 {
@@ -20,13 +19,13 @@ public class RatingDto
 
 public class ProductDto
 {
-    public string Title {get; set;}
-    public string Description { get; set;}
-    public string Category {get; set;}
-    public string Size {get; set;}
-    public string Color {get; set;}
-    public double Price {get; set;}
-    public double AverageRating {get; set;}
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public string Category { get; set; }
+    public string Size { get; set; }
+    public string Color { get; set; }
+    public double Price { get; set; }
+    public double AverageRating { get; set; }
     public List<ReviewDto> Reviews { get; set; }
 
     public ProductDto(Product product)
@@ -50,8 +49,9 @@ public class ReviewDto
     public ReviewDto(Review review)
     {
         this.inputReview = review.UserReview;
-        this.inputName = review.User.UserName; 
+        this.inputName = review.User.UserName;
     }
+
     public ReviewDto() { }
 }
 
@@ -64,7 +64,12 @@ public class CustomerController : ControllerBase
     UserManager<User> userManager;
     private ApplicationContext context;
 
-    public CustomerController(ProductService productService, RoleManager<IdentityRole> roleManager, UserManager<User> userManager, ApplicationContext context)
+    public CustomerController(
+        ProductService productService,
+        RoleManager<IdentityRole> roleManager,
+        UserManager<User> userManager,
+        ApplicationContext context
+    )
     {
         this.productService = productService;
         this.roleManager = roleManager;
@@ -76,7 +81,10 @@ public class CustomerController : ControllerBase
     [Authorize]
     public IActionResult GetAllProducts()
     {
-        List<ProductDto> productDtos = productService.GetAllProducts().Select(product => new ProductDto(product)).ToList();
+        List<ProductDto> productDtos = productService
+            .GetAllProducts()
+            .Select(product => new ProductDto(product))
+            .ToList();
         return Ok(productDtos);
     }
 
@@ -105,4 +113,29 @@ public class CustomerController : ControllerBase
         return Ok("Rating submitted succefully.");
     }
 
+    [HttpPost("product/{id}/cart")]
+    [Authorize]
+    public IActionResult AddProductToCart(int id)
+    {
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Product cart = productService.AddProductToCart(id, userId);
+        return Ok(cart);
+    }
+
+    [HttpDelete("product/{id}/cart")]
+    [Authorize]
+    public IActionResult RemoveFromCart(int id)
+    {
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Product product = productService.RemoveProductFromCart(id, userId);
+        return Ok(product);
+    }
+
+    [HttpGet("cart")]
+    [Authorize]
+    public IActionResult GetCartItems()
+    {
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return Ok(productService.GetAllCartItems(userId));
+    }
 }
