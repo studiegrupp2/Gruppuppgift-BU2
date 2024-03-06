@@ -28,11 +28,12 @@ public class ProductService
     // public Product AddRating(int id, double rating)
     // {
     //     Product? product = context.Products.Find(id);
+    //     double ratingList = context.
     //     if(product == null)
     //     {
     //        throw new ArgumentException("Product not found.");
     //     }
-    //     product.Rating++;
+    //     product.AverageRating++;
     //     context.SaveChanges();
     // return product;
     // }
@@ -62,4 +63,20 @@ public class ProductService
 
         return _review;
     }
+
+    public Rating AddRating(int productId, double ratingValue)
+    {
+        Product? product = context.Products.Find(productId);
+        if (product == null)
+        {
+            throw new ArgumentException("Product not found.");
+        }
+        Rating userRating = new Rating(ratingValue, product);
+        product.ratingList.Add(ratingValue);
+        context.SaveChanges();
+
+        return userRating;
+    }
+
+    
 }

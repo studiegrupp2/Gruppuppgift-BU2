@@ -28,7 +28,8 @@ public class ProductDto
     public string Size {get; set;}
     public string Color {get; set;}
     public double Price {get; set;}
-    public double Rating {get; set;}
+    public double AverageRating {get; set;}
+    // public double Rating { get; set; }
     public List<ReviewDto> Reviews { get; set; }
 
     public ProductDto(Product product)
@@ -39,7 +40,8 @@ public class ProductDto
         this.Size = product.Size;
         this.Color = product.Color;
         this.Price = product.Price;
-        this.Rating = product.Rating;
+        this.AverageRating = product.AverageRating();
+        // this.Rating = product.Rating;
         this.Reviews = product.Reviews.Select(review => new ReviewDto(review)).ToList();
     }
 }
@@ -92,16 +94,19 @@ public class CustomerController : ControllerBase
 
         ReviewDto output = new ReviewDto(_review);
         return Ok(output);
+    }
 
-        // ---
-        //string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //User? user = context.Users.Find(userId);
-       // string reviewInput = dto.inputReview;
-
-        //Review _review = productService.AddReview(reviewInput, user, product);
-
-        // ReviewDto output = new ReviewDto(_review);
-        // return Ok(output);
+    [HttpPost("product/{id}/rating")]
+    [Authorize]
+    public IActionResult AddRating([FromQuery] double userRating, int id)
+    {
+        if (userRating < 0 || userRating > 5)
+        {
+            return BadRequest("Not valid rating value.");
+        }
+        int productId = id;
+        Rating rating = productService.AddRating(productId, userRating);
+        return Ok("Rating submitted succefully.");
     }
 
 }
