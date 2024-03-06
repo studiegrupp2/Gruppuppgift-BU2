@@ -2,16 +2,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gruppuppgift_BU2;
 
-public class CreateProductDto 
+public class CreateProductDto
 {
-    public string Title {get; set;}
-    public string Description { get; set;}
-    public string Category {get; set;}
-    public string Size {get; set;}
-    public string Color {get; set;}
-    public double Price {get; set;}
-    
-    public CreateProductDto(string title, string description, string category, string size, string color, double price)
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public string Category { get; set; }
+    public string Size { get; set; }
+    public string Color { get; set; }
+    public double Price { get; set; }
+
+    public CreateProductDto(
+        string title,
+        string description,
+        string category,
+        string size,
+        string color,
+        double price
+    )
     {
         this.Title = title;
         this.Description = description;
@@ -32,17 +39,39 @@ public class ProductController : ControllerBase
     {
         this.productService = productService;
     }
-    [HttpPost]
+
+    [HttpPost("create")]
     public IActionResult CreateProduct([FromBody] CreateProductDto dto)
     {
-        try 
+        try
         {
-            productService.CreateProduct(dto.Title, dto.Description, dto.Category, dto.Size, dto.Color, dto.Price);
+            productService.CreateProduct(
+                dto.Title,
+                dto.Description,
+                dto.Category,
+                dto.Size,
+                dto.Color,
+                dto.Price
+            );
             return Ok("Product " + dto.Title + " added");
         }
         catch (ArgumentException)
         {
             return BadRequest();
-        } 
+        }
+    }
+
+    [HttpDelete("delete/{id}")]
+    public IActionResult DeleteProduct(int Id)
+    {
+        int productId = Id;
+        Product product = productService.DeleteProduct(productId);
+
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return Ok("Product " + productId + " is deleted");
     }
 }
