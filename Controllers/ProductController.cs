@@ -74,4 +74,11 @@ public class ProductController : ControllerBase
 
         return Ok("Product " + productId + " is deleted");
     }
+
+    // [HttpPut("update/{id}")]
+    // public IActionResult UpdateProduct([FromBody] )
+    // {
+        
+    //     return Ok();
+    // }
 }
