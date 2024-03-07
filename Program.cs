@@ -55,38 +55,82 @@ public class Program
         app.MapControllers();
         app.MapIdentityApi<User>();
 
+        Task.Run(async () =>
+        {
+            await CreateRole(app.Services);
+            await CreateUser(app.Services);
+        });
         app.Run();
     }
-}
 
-public class UserClaimsTransformation : IClaimsTransformation
-{
-    UserManager<User> userManager;
-
-    public UserClaimsTransformation(UserManager<User> userManager)
+    static async Task CreateRole(IServiceProvider provider)
     {
-        this.userManager = userManager;
+        var scope = provider.CreateScope();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+        IdentityRole? exisiting = await roleManager.FindByNameAsync("manager");
+        if (exisiting == null)
+        {
+            await roleManager.CreateAsync(new IdentityRole("manager"));
+        }
     }
 
-    public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
+    static async Task CreateUser(IServiceProvider provider)
     {
-        ClaimsIdentity claims = new ClaimsIdentity();
-
-        var id = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (id != null)
+        var scope = provider.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        User? existingUser = await userManager.FindByNameAsync("chef@hotmail.com");
+        var hasher = new PasswordHasher<User>();
+        if (existingUser == null)
         {
-            var user = await userManager.FindByIdAsync(id);
-            if (user != null)
+            var adminUser = new User()
             {
-                var userRoles = await userManager.GetRolesAsync(user);
-                foreach (var userRole in userRoles)
-                {
-                    claims.AddClaim(new Claim(ClaimTypes.Role, userRole));
-                }
-            }
+                Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
+                UserName = "chef@hotmail.com",
+                Email = "chef@hotmail.com",
+                NormalizedUserName = "chef@hotmail.com".ToUpper(),
+                NormalizedEmail = "chef@hotmail.com".ToUpper(),
+                PasswordHash = hasher.HashPassword(null, "Admin123!"),
+                EmailConfirmed = true,
+                LockoutEnabled = true,
+                PhoneNumberConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+            await userManager.CreateAsync(adminUser);
+            await userManager.ChangePasswordAsync(adminUser, "Admin123!", "Chef123!");
+
+            await userManager.AddToRoleAsync(adminUser, "manager");
+        }
+    }
+
+    public class UserClaimsTransformation : IClaimsTransformation
+    {
+        UserManager<User> userManager;
+
+        public UserClaimsTransformation(UserManager<User> userManager)
+        {
+            this.userManager = userManager;
         }
 
-        principal.AddIdentity(claims);
-        return await Task.FromResult(principal);
+        public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
+        {
+            ClaimsIdentity claims = new ClaimsIdentity();
+
+            var id = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (id != null)
+            {
+                var user = await userManager.FindByIdAsync(id);
+                if (user != null)
+                {
+                    var userRoles = await userManager.GetRolesAsync(user);
+                    foreach (var userRole in userRoles)
+                    {
+                        claims.AddClaim(new Claim(ClaimTypes.Role, userRole));
+                    }
+                }
+            }
+            principal.AddIdentity(claims);
+            return await Task.FromResult(principal);
+        }
     }
 }
