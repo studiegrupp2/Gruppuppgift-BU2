@@ -10,6 +10,7 @@ public class Product
     public string Color { get; set; }
     public double Price { get; set; }
 
+
     public List<double> ratingList { get; set; } = new List<double>();
 
     public double AverageRating()
@@ -40,6 +41,8 @@ public class Product
         this.Reviews = Reviews;
     }
 }
+
+
 
 public class Review
 {

@@ -55,6 +55,20 @@ public class ReviewDto
     public ReviewDto() { }
 }
 
+public class CartItemDto
+{
+    public Product Product {get; set;}
+    public int Quantity {get; set;}
+
+    public CartItemDto(CartItem cartItem)
+    {
+        this.Product = cartItem.Product;
+        this.Quantity = cartItem.Quantity;
+    }
+
+    public CartItemDto() { }
+}
+
 [ApiController]
 [Route("store")]
 public class CustomerController : ControllerBase
@@ -118,17 +132,27 @@ public class CustomerController : ControllerBase
     public IActionResult AddProductToCart(int id)
     {
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        Product cart = productService.AddProductToCart(id, userId);
-        return Ok(cart);
+        CartItem cart = productService.AddProductToCart(id, userId);
+
+        CartItemDto output = new CartItemDto(cart);
+        return Ok(output);
     }
 
     [HttpDelete("product/{id}/cart")]
     [Authorize]
     public IActionResult RemoveFromCart(int id)
     {
-        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        Product product = productService.RemoveProductFromCart(id, userId);
-        return Ok(product);
+        try 
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            CartItem cart = productService.RemoveProductFromCart(id, userId);
+            CartItemDto output = new CartItemDto(cart);
+            return Ok(output);
+        }
+        catch (ArgumentException)
+        {
+            return BadRequest("Product or user not found");
+        }
     }
 
     [HttpGet("cart")]
@@ -136,6 +160,7 @@ public class CustomerController : ControllerBase
     public IActionResult GetCartItems()
     {
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return Ok(productService.GetAllCartItems(userId));
+
+        return Ok(productService.GetAllCartItems(userId).Select(item => new CartItemDto(item)).ToList());
     }
 }

@@ -83,7 +83,7 @@ public class ProductService
         return userRating;
     }
 
-    public Product AddProductToCart(int productId, string userId)
+    public CartItem AddProductToCart(int productId, string userId)
     {
         Product? product = context.Products.Find(productId);
         User? user = context.Users.Find(userId);
@@ -96,45 +96,63 @@ public class ProductService
         {
             throw new ArgumentException("User not found");
         }
-    
-        user.Cart.Add(product);
+        int quantity = 0;
+        List<CartItem> cartList = context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
+        if (cartList.Any(item => item.Product.Id == productId))
+        {
+            int index = cartList.FindIndex(item => item.Product.Id == productId);
+            cartList[index].Quantity ++;
+
+            context.SaveChanges();
+            return cartList[index];
+        }
+         
+        CartItem? cartItem = new CartItem(product, user, 1);
+       
+        context.CartItems.Add(cartItem);
         context.SaveChanges();
-        return product;
+        return cartItem;
     }
 
-    public Product RemoveProductFromCart(int productId, string userId)
+    public CartItem? RemoveProductFromCart(int productId, string userId)
     {
         User? user = context.Users.Find(userId);
-        List<Product> Cart = user.Cart.ToList();
+        //List<CartItem> Cart = user.Cart.ToList();
 
-        Product? product = Cart.Find(item => item.Id == productId);
+        List<CartItem> Cart = context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
+        CartItem? product = Cart.Find(item => item.Product.Id == productId);
 
+        //List<CartItem> cartList = context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
         if (product == null)
         {
-            throw new ArgumentException("Product not found.");
+            throw new ArgumentException("product not found");
         }
         if (user == null)
         {
             throw new ArgumentException("User not found");
         }
-        user.Cart.Remove(product);
+        if (product.Quantity > 1)
+        {
+            product.Quantity --;
+
+            context.SaveChanges();
+            return product;
+        }
+        
+        context.CartItems.Remove(product);
         context.SaveChanges();
         return product;
     }
 
-    public List<Product> GetAllCartItems(string userId)
+    public List<CartItem> GetAllCartItems(string userId)
     {
         User? user = context.Users.Find(userId);
         if (user == null)
         {
             throw new ArgumentException("User not found");
-            // return new List<Product>();
         }
-        //return user.Cart.Include(Cart)ToList();
-        List<Product> Cart = user.Cart.ToList();
-        //return context.Users.Select(user => user.Cart).ToList();
-        //return context.Products.Include(product => product.Reviews).ToList();
-
+        
+        return context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
     }
 }
 
