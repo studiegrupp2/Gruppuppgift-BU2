@@ -11,7 +11,7 @@ public class User : IdentityUser
 
 // public class Cart {
 //  [key]
-//  public string UserId {get; set;}
+//  public int CartID {get; set;}
 //  public Product Product {get; set;}
 //  public int Quantity {get; set;}
 // }

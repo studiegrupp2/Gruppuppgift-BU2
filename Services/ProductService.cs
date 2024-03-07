@@ -132,7 +132,7 @@ public class ProductService
         }
         //return user.Cart.Include(Cart)ToList();
         List<Product> Cart = user.Cart.ToList();
-        return Cart;
+        //return context.Users.Select(user => user.Cart).ToList();
         //return context.Products.Include(product => product.Reviews).ToList();
 
     }
