@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace Gruppuppgift_BU2;
 
@@ -43,9 +44,43 @@ public class ProductService
         return product;
     }
 
+    public Product UpdateProduct(
+        int productId, 
+        string title,
+        string description,
+        string category,
+        string size,
+        string color,
+        double price)
+    {
+        Product? product = context.Products.Find(productId);
+
+        if (product == null)
+        {
+            throw new ArgumentException("Product not found.");
+        }
+
+        product.Title = title;
+        product.Description = description;
+        product.Category = category;
+        product.Size = size;
+        product.Color = color;
+        product.Size = size;
+        product.Price = price;
+
+        context.SaveChanges();
+
+        return product;
+    }
+
     public List<Product> GetAllProducts()
     {
         return context.Products.Include(product => product.Reviews).ToList();
+    }
+
+    public List<Order> GetAllOrders()
+    {
+        return context.Orders.Include(order => order.Items).Include(order => order.User).ToList();
     }
 
     public Review AddReview(string review, string userId, int productId)
@@ -153,6 +188,36 @@ public class ProductService
         }
         
         return context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
+    }
+
+    public List<CartItem> BuyItemsInCart(string userId)
+    {
+        User? user = context.Users.Find(userId);
+        if (user == null)
+        {
+            throw new ArgumentException("User not found");
+        }
+
+        List<CartItem> cartHistory = context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
+        List<PurchasedItem> newOrder = new List<PurchasedItem>();
+        foreach(CartItem item in cartHistory)
+        {
+            PurchasedItem purchased = new PurchasedItem(item);
+            newOrder.Add(purchased);
+            context.PurchasedItems.Add(purchased);
+            context.CartItems.Remove(item);
+        }
+        
+        Order order = new Order(newOrder, user);
+        context.Orders.Add(order);
+        user.Cart.Clear();
+        context.SaveChanges();
+        if (cartHistory == null || cartHistory.Count < 1)
+        {
+            throw new ArgumentException("Cart Empty");
+        }
+        
+        return cartHistory;
     }
 }
 

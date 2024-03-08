@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gruppuppgift_BU2;
@@ -29,8 +30,24 @@ public class CreateProductDto
     }
 }
 
+public class OrderDto
+{
+    public List<PurchasedItem> Items {get; set;}
+    //public string? UserEmail {get; set;}
+    public System.DateTime OrderDate {get; set;}
+
+    public OrderDto(Order order)
+    {
+        this.Items = order.Items;
+       // this.UserEmail = order.User.Email;
+        this.OrderDate = order.OrderDate;
+    }
+
+    public OrderDto() {}
+}
+
 [ApiController]
-[Route("")]
+[Route("manager")]
 public class ProductController : ControllerBase
 {
     private ProductService productService;
@@ -41,6 +58,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost("create")]
+    [Authorize("manager")]
     public IActionResult CreateProduct([FromBody] CreateProductDto dto)
     {
         try
@@ -62,6 +80,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpDelete("delete/{id}")]
+    [Authorize("manager")]
     public IActionResult DeleteProduct(int Id)
     {
         int productId = Id;
@@ -75,10 +94,36 @@ public class ProductController : ControllerBase
         return Ok("Product " + productId + " is deleted");
     }
 
-    // [HttpPut("update/{id}")]
-    // public IActionResult UpdateProduct([FromBody] )
+    [HttpPut("update/{id}")]
+    [Authorize("manager")]
+    public IActionResult UpdateProduct([FromBody] CreateProductDto dto, int id)
+    {
+        int productId = id;
+        try
+        {
+            productService.UpdateProduct(
+                productId,
+                dto.Title,
+                dto.Description,
+                dto.Category,
+                dto.Size,
+                dto.Color,
+                dto.Price
+            );
+            return Ok("Product " + dto.Title + " updated");
+        }
+        catch (ArgumentException)
+        {
+            return BadRequest("Product not found.");
+        }
+    }
+
+//funkar ej
+    // [HttpGet("orders")]
+    // [Authorize("manager")]
+    // public IActionResult GetAllOrders()
     // {
-        
-    //     return Ok();
+    //     List<OrderDto> orderDtos = productService.GetAllOrders().ToList().Select(order => new OrderDto(order)).ToList();
+    //     return Ok(orderDtos);
     // }
 }

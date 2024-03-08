@@ -29,7 +29,7 @@ public class Program
         builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy(
-                "create_product",
+                "manager",
                 policy =>
                 {
                     policy.RequireAuthenticatedUser().RequireRole("manager");

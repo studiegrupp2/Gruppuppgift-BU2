@@ -92,7 +92,6 @@ public class CustomerController : ControllerBase
     }
 
     [HttpGet("products")]
-    [Authorize]
     public IActionResult GetAllProducts()
     {
         List<ProductDto> productDtos = productService
@@ -162,5 +161,22 @@ public class CustomerController : ControllerBase
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         return Ok(productService.GetAllCartItems(userId).Select(item => new CartItemDto(item)).ToList());
+    }
+
+
+    [HttpPut("product/cart/buy")]
+    [Authorize]
+    public IActionResult BuyItems()
+    {
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        try
+        {
+            return Ok(productService.BuyItemsInCart(userId).Select(item => new CartItemDto(item)).ToList());
+        }
+        catch (ArgumentException)
+        {
+            return BadRequest("No items in cart");
+        }
     }
 }

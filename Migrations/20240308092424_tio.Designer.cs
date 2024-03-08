@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Gruppuppgift_BU2;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Gruppuppgift_BU2.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240308092424_tio")]
+    partial class tio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,27 +50,6 @@ namespace Gruppuppgift_BU2.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("CartItems");
-                });
-
-            modelBuilder.Entity("Gruppuppgift_BU2.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Gruppuppgift_BU2.Product", b =>
@@ -108,37 +90,6 @@ namespace Gruppuppgift_BU2.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Gruppuppgift_BU2.PurchasedItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PurchasedItems");
                 });
 
             modelBuilder.Entity("Gruppuppgift_BU2.Review", b =>
@@ -381,36 +332,6 @@ namespace Gruppuppgift_BU2.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Gruppuppgift_BU2.Order", b =>
-                {
-                    b.HasOne("Gruppuppgift_BU2.User", "User")
-                        .WithMany("OrderHistory")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Gruppuppgift_BU2.PurchasedItem", b =>
-                {
-                    b.HasOne("Gruppuppgift_BU2.Order", null)
-                        .WithMany("Items")
-                        .HasForeignKey("OrderId");
-
-                    b.HasOne("Gruppuppgift_BU2.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Gruppuppgift_BU2.User", "User")
-                        .WithMany("PurchaseHistory")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Gruppuppgift_BU2.Review", b =>
                 {
                     b.HasOne("Gruppuppgift_BU2.Product", "Product")
@@ -479,11 +400,6 @@ namespace Gruppuppgift_BU2.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Gruppuppgift_BU2.Order", b =>
-                {
-                    b.Navigation("Items");
-                });
-
             modelBuilder.Entity("Gruppuppgift_BU2.Product", b =>
                 {
                     b.Navigation("Reviews");
@@ -492,10 +408,6 @@ namespace Gruppuppgift_BU2.Migrations
             modelBuilder.Entity("Gruppuppgift_BU2.User", b =>
                 {
                     b.Navigation("Cart");
-
-                    b.Navigation("OrderHistory");
-
-                    b.Navigation("PurchaseHistory");
                 });
 #pragma warning restore 612, 618
         }
