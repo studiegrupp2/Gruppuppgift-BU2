@@ -78,7 +78,7 @@ public class ProductController : ControllerBase
     {
         try
         {
-            productService.CreateProduct(
+            var product = productService.CreateProduct(
                 dto.Title,
                 dto.Description,
                 dto.Category,
@@ -86,7 +86,7 @@ public class ProductController : ControllerBase
                 dto.Color,
                 dto.Price
             );
-            return Ok("Product " + dto.Title + " added");
+            return Ok(product);
         }
         catch (ArgumentException)
         {
@@ -106,7 +106,7 @@ public class ProductController : ControllerBase
             return NotFound();
         }
 
-        return Ok("Product " + productId + " is deleted");
+        return Ok(product);
     }
 
     [HttpPut("update/{id}")]
