@@ -19,6 +19,7 @@ public class RatingDto
 
 public class ProductDto
 {
+    public int Id {get; set;}
     public string Title { get; set; }
     public string Description { get; set; }
     public string Category { get; set; }
@@ -30,6 +31,7 @@ public class ProductDto
 
     public ProductDto(Product product)
     {
+        this.Id = product.Id;
         this.Title = product.Title;
         this.Description = product.Description;
         this.Category = product.Category;
@@ -59,11 +61,12 @@ public class CartItemDto
 {
     public Product Product {get; set;}
     public int Quantity {get; set;}
-
+    public double TotalPrice {get; set;}
     public CartItemDto(CartItem cartItem)
     {
         this.Product = cartItem.Product;
         this.Quantity = cartItem.Quantity;
+        this.TotalPrice = cartItem.TotalPrice();
     }
 
     public CartItemDto() { }
@@ -159,8 +162,8 @@ public class CustomerController : ControllerBase
     public IActionResult GetCartItems()
     {
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        return Ok(productService.GetAllCartItems(userId).Select(item => new CartItemDto(item)).ToList());
+        double Total = productService.GetCartItemsTotalPrice(userId);
+        return Ok(new {first = productService.GetAllCartItems(userId).Select(item => new CartItemDto(item)).ToList(), Total});
     }
 
 

@@ -30,19 +30,34 @@ public class CreateProductDto
     }
 }
 
+public class OrderItemDto
+{
+    public string ProductTitle {get; set;}
+    public int Quantity {get; set;}
+    public double ProductPrice { get; set;}
+    public double TotalPrice {get; set;}
+ 
+    public OrderItemDto(PurchasedItem item)
+    {
+        this.ProductTitle = item.ProductTitle;
+        this.ProductPrice = item.ProductPrice;
+        this.Quantity = item.Quantity;
+        this.TotalPrice = item.TotalPrice();
+    }
+}
 public class OrderDto
 {
-    public List<PurchasedItem> Items {get; set;}
-    //public string? UserEmail {get; set;}
+    public List<OrderItemDto> Items {get; set;}
+    public string? UserEmail {get; set;}
     public System.DateTime OrderDate {get; set;}
-
+    public double TotalOrderPrice { get; set; }
     public OrderDto(Order order)
     {
-        this.Items = order.Items;
-       // this.UserEmail = order.User.Email;
+        this.Items = order.Items.Select(item => new OrderItemDto(item)).ToList();
+        this.UserEmail = order.User.Email;
         this.OrderDate = order.OrderDate;
+        this.TotalOrderPrice = order.TotalOrderPrice();
     }
-
     public OrderDto() {}
 }
 
@@ -118,12 +133,11 @@ public class ProductController : ControllerBase
         }
     }
 
-//funkar ej
-    // [HttpGet("orders")]
-    // [Authorize("manager")]
-    // public IActionResult GetAllOrders()
-    // {
-    //     List<OrderDto> orderDtos = productService.GetAllOrders().ToList().Select(order => new OrderDto(order)).ToList();
-    //     return Ok(orderDtos);
-    // }
+    [HttpGet("orders")]
+    [Authorize("manager")]
+    public IActionResult GetAllOrders()
+    {
+        List<OrderDto> orderDtos = productService.GetAllOrders().ToList().Select(order => new OrderDto(order)).ToList();
+        return Ok(orderDtos);
+    }
 }

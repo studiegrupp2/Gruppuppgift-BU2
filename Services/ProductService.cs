@@ -187,7 +187,41 @@ public class ProductService
             throw new ArgumentException("User not found");
         }
         
-        return context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
+        List<CartItem> cartItems = context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
+
+        // double TotalPrice()
+        // {
+        //     double sum = 0;
+        //     foreach (CartItem item in cartItems)
+        //     {
+        //        // double productPrice = item.TotalPrice(); //denna och nedan rad kan slås ihop
+        //         sum += item.TotalPrice();
+        //     }
+
+        //     return sum;
+        // }
+
+        return cartItems;
+    }
+
+    public double GetCartItemsTotalPrice(string userId)
+    {
+        User? user = context.Users.Find(userId);
+        if (user == null)
+        {
+            throw new ArgumentException("User not found");
+        }
+        
+        List<CartItem> cartItems = context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
+
+        double sum = 0;
+            foreach (CartItem item in cartItems)
+            {
+                double productPrice = item.TotalPrice(); //denna och nedan rad kan slås ihop
+                sum += productPrice;
+            }
+
+        return sum;
     }
 
     public List<CartItem> BuyItemsInCart(string userId)
