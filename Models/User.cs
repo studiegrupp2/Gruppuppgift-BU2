@@ -17,7 +17,10 @@ public class CartItem
     public Product Product { get; set; }
     public int Quantity { get; set; }
     public User User { get; set; }
-
+    public double TotalPrice()
+    {
+        return this.Quantity * this.Product.Price;
+    }
     public CartItem() { }
     public CartItem(Product product, User user, int quantity)
     {
@@ -33,6 +36,14 @@ public class PurchasedItem
     public Product Product { get; set; }
     public int Quantity { get; set; }
     public User User { get; set; }
+    public string ProductTitle { get; set; }
+    public double ProductPrice { get; set;}
+
+    public double TotalPrice()
+    {
+        return this.Quantity * this.ProductPrice;
+    }
+    
 
     public PurchasedItem() { }
     public PurchasedItem(CartItem cartItem)
@@ -40,6 +51,9 @@ public class PurchasedItem
         this.Product = cartItem.Product;
         this.User = cartItem.User;
         this.Quantity = cartItem.Quantity;
+        this.ProductTitle = cartItem.Product.Title;
+        this.ProductPrice = cartItem.Product.Price;
+       // this.TotalPrice();
     }
 }
 
@@ -49,6 +63,16 @@ public class Order
     public List<PurchasedItem> Items {get; set;}
     public User User { get; set; }
     public System.DateTime OrderDate {get; set;}
+    public double TotalOrderPrice()
+    {
+        double sum = 0;
+        foreach(PurchasedItem item in Items) {
+            // double productPrice = item.TotalPrice();
+            sum += item.TotalPrice();
+        }
+
+        return sum;
+    }
 
     public Order(List<PurchasedItem> items, User user){
         this.OrderDate = DateTime.Now;
