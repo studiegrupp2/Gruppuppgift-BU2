@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/isakgunnardo/Ecutbildning/backend2/Gruppuppgift-BU2/Gruppuppgift-BU2.csproj": {}
+    "/Users/isakgunnardo/Ecutbildning/backend2/BU2-Gruppuppgift/GruppuppgiftBU2/Gruppuppgift-BU2.csproj": {}
   },
   "projects": {
-    "/Users/isakgunnardo/Ecutbildning/backend2/Gruppuppgift-BU2/Gruppuppgift-BU2.csproj": {
+    "/Users/isakgunnardo/Ecutbildning/backend2/BU2-Gruppuppgift/GruppuppgiftBU2/Gruppuppgift-BU2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/isakgunnardo/Ecutbildning/backend2/Gruppuppgift-BU2/Gruppuppgift-BU2.csproj",
+        "projectUniqueName": "/Users/isakgunnardo/Ecutbildning/backend2/BU2-Gruppuppgift/GruppuppgiftBU2/Gruppuppgift-BU2.csproj",
         "projectName": "Gruppuppgift-BU2",
-        "projectPath": "/Users/isakgunnardo/Ecutbildning/backend2/Gruppuppgift-BU2/Gruppuppgift-BU2.csproj",
+        "projectPath": "/Users/isakgunnardo/Ecutbildning/backend2/BU2-Gruppuppgift/GruppuppgiftBU2/Gruppuppgift-BU2.csproj",
         "packagesPath": "/Users/isakgunnardo/.nuget/packages/",
-        "outputPath": "/Users/isakgunnardo/Ecutbildning/backend2/Gruppuppgift-BU2/obj/",
+        "outputPath": "/Users/isakgunnardo/Ecutbildning/backend2/BU2-Gruppuppgift/GruppuppgiftBU2/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/isakgunnardo/.nuget/NuGet/NuGet.Config"
