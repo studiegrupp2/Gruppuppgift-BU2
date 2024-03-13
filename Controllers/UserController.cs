@@ -51,7 +51,7 @@ public class ReviewDto
     public ReviewDto(Review review)
     {
         this.inputReview = review.UserReview;
-        this.inputName = review.User.UserName;
+        this.inputName = review.ReviewUserName;
     }
 
     public ReviewDto() { }
@@ -110,10 +110,17 @@ public class CustomerController : ControllerBase
     {
         int productId = id;
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        Review _review = productService.AddReview(dto.inputReview, userId, productId);
 
-        ReviewDto output = new ReviewDto(_review);
-        return Ok(output);
+        try
+        {
+            Review _review = productService.AddReview(dto.inputReview, userId, productId);
+            ReviewDto output = new ReviewDto(_review);
+            return Ok(output);
+        }
+        catch(ArgumentException)
+        {
+            return BadRequest("User or product not found");
+        }
     }
 
     [HttpPost("product/{id}/rating")]
@@ -163,7 +170,7 @@ public class CustomerController : ControllerBase
     {
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         double Total = productService.GetCartItemsTotalPrice(userId);
-        return Ok(new {first = productService.GetAllCartItems(userId).Select(item => new CartItemDto(item)).ToList(), Total});
+        return Ok(new {cart = productService.GetAllCartItems(userId).Select(item => new CartItemDto(item)).ToList(), Total});
     }
 
 
@@ -175,7 +182,8 @@ public class CustomerController : ControllerBase
 
         try
         {
-            return Ok(productService.BuyItemsInCart(userId).Select(item => new CartItemDto(item)).ToList());
+            double Total = productService.GetCartItemsTotalPrice(userId);
+            return Ok(new {Order = productService.BuyItemsInCart(userId).Select(item => new CartItemDto(item)).ToList(), Total});
         }
         catch (ArgumentException)
         {
