@@ -19,7 +19,7 @@ public class RatingDto
 
 public class ProductDto
 {
-    public int Id {get; set;}
+    public int Id { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public string Category { get; set; }
@@ -59,9 +59,10 @@ public class ReviewDto
 
 public class CartItemDto
 {
-    public Product Product {get; set;}
-    public int Quantity {get; set;}
-    public double TotalPrice {get; set;}
+    public Product Product { get; set; }
+    public int Quantity { get; set; }
+    public double TotalPrice { get; set; }
+
     public CartItemDto(CartItem cartItem)
     {
         this.Product = cartItem.Product;
@@ -117,7 +118,7 @@ public class CustomerController : ControllerBase
             ReviewDto output = new ReviewDto(_review);
             return Ok(output);
         }
-        catch(ArgumentException)
+        catch (ArgumentException)
         {
             return BadRequest("User or product not found");
         }
@@ -127,31 +128,44 @@ public class CustomerController : ControllerBase
     [Authorize]
     public IActionResult AddRating([FromQuery] double userRating, int id)
     {
-        if (userRating < 0 || userRating > 5)
-        {
-            return BadRequest("Not valid rating value.");
-        }
         int productId = id;
-        Rating rating = productService.AddRating(productId, userRating);
-        return Ok("Rating submitted succefully.");
+        try
+        {
+            Rating rating = productService.AddRating(productId, userRating);
+            return Ok("Rating submitted succefully.");
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            return BadRequest("Value out of range");
+        }
+        catch (ArgumentException)
+        {
+            return BadRequest("Product not found");
+        }
     }
 
     [HttpPost("product/{id}/cart")]
     [Authorize]
     public IActionResult AddProductToCart(int id)
     {
-        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        CartItem cart = productService.AddProductToCart(id, userId);
+        try
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            CartItem cart = productService.AddProductToCart(id, userId);
 
-        CartItemDto output = new CartItemDto(cart);
-        return Ok(output);
+            CartItemDto output = new CartItemDto(cart);
+            return Ok(output);
+        }
+        catch (ArgumentException)
+        {
+            return BadRequest("Product not found");
+        }
     }
-
     [HttpDelete("product/{id}/cart")]
     [Authorize]
     public IActionResult RemoveFromCart(int id)
     {
-        try 
+        try
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             CartItem cart = productService.RemoveProductFromCart(id, userId);
@@ -170,9 +184,17 @@ public class CustomerController : ControllerBase
     {
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         double Total = productService.GetCartItemsTotalPrice(userId);
-        return Ok(new {cart = productService.GetAllCartItems(userId).Select(item => new CartItemDto(item)).ToList(), Total});
+        return Ok(
+            new
+            {
+                cart = productService
+                    .GetAllCartItems(userId)
+                    .Select(item => new CartItemDto(item))
+                    .ToList(),
+                Total
+            }
+        );
     }
-
 
     [HttpPut("product/cart/buy")]
     [Authorize]
@@ -183,7 +205,16 @@ public class CustomerController : ControllerBase
         try
         {
             double Total = productService.GetCartItemsTotalPrice(userId);
-            return Ok(new {Order = productService.BuyItemsInCart(userId).Select(item => new CartItemDto(item)).ToList(), Total});
+            return Ok(
+                new
+                {
+                    Order = productService
+                        .BuyItemsInCart(userId)
+                        .Select(item => new CartItemDto(item))
+                        .ToList(),
+                    Total
+                }
+            );
         }
         catch (ArgumentException)
         {

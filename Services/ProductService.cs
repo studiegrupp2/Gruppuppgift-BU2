@@ -104,12 +104,16 @@ public class ProductService
         return _review;
     }
 
-    public Rating AddRating(int productId, double ratingValue)
+     public Rating AddRating(int productId, double ratingValue)
     {
         Product? product = context.Products.Find(productId);
         if (product == null)
         {
             throw new ArgumentException("Product not found.");
+        }
+        if (ratingValue < 0 || ratingValue > 5)
+        {
+            throw new ArgumentOutOfRangeException("Rating value out of range");
         }
         Rating userRating = new Rating(ratingValue, product);
         product.ratingList.Add(ratingValue);
