@@ -47,8 +47,8 @@ public class Review
     public int Id { get; set; }
     public string UserReview { get; set; }
     public User User { get; set; }
-    public Product Product { get; set; }
-
+    public Product? Product { get; set; }
+    public string? ReviewUserName {get; set;}
     public Review() { }
 
     public Review(string userReview, User user, Product product)
@@ -56,6 +56,7 @@ public class Review
         this.UserReview = userReview;
         this.User = user;
         this.Product = product;
+        this.ReviewUserName = user.UserName;
     }
 }
 
