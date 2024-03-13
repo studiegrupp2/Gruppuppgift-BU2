@@ -11,6 +11,17 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(
+                name: MyAllowSpecificOrigins,
+                policy =>
+                {
+                    policy.WithOrigins("http://localhost:3000", "http://localhost:5000");
+                }
+            );
+        });
         builder.Services.AddDbContext<ApplicationContext>(options =>
             options.UseNpgsql(
                 "Host=localhost;Database=Ecommerce;Username=postgres;Password=password"
@@ -52,6 +63,7 @@ public class Program
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseCors(MyAllowSpecificOrigins);
         app.MapControllers();
         app.MapIdentityApi<User>();
 

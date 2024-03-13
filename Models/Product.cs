@@ -9,7 +9,7 @@ public class Product
     public string Size { get; set; }
     public string Color { get; set; }
     public double Price { get; set; }
-
+    
 
     public List<double> ratingList { get; set; } = new List<double>();
 
