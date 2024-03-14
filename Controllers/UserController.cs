@@ -28,6 +28,7 @@ public class ProductDto
     public double Price { get; set; }
     public double AverageRating { get; set; }
     public List<ReviewDto> Reviews { get; set; }
+    public string Thumbnail { get; set; }
 
     public ProductDto(Product product)
     {
@@ -40,6 +41,7 @@ public class ProductDto
         this.Price = product.Price;
         this.AverageRating = product.AverageRating();
         this.Reviews = product.Reviews.Select(review => new ReviewDto(review)).ToList();
+        this.Thumbnail = product.Thumbnail;
     }
 }
 

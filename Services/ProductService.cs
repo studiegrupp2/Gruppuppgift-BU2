@@ -20,10 +20,11 @@ public class ProductService
         string category,
         string size,
         string color,
-        double price
+        double price,
+        string thumbnail
     )
     {
-        Product product = new Product(title, description, category, size, color, price);
+        Product product = new Product(title, description, category, size, color, price, thumbnail);
         context.Products.Add(product);
         context.SaveChanges();
         return product;
@@ -51,7 +52,8 @@ public class ProductService
         string category,
         string size,
         string color,
-        double price)
+        double price,
+        string thumbnail)
     {
         Product? product = context.Products.Find(productId);
 
@@ -67,6 +69,7 @@ public class ProductService
         product.Color = color;
         product.Size = size;
         product.Price = price;
+        product.Thumbnail = thumbnail;
 
         context.SaveChanges();
 

@@ -11,6 +11,7 @@ public class CreateProductDto
     public string Size { get; set; }
     public string Color { get; set; }
     public double Price { get; set; }
+    public string Thumbnail { get; set; }
 
     public CreateProductDto(
         string title,
@@ -18,7 +19,8 @@ public class CreateProductDto
         string category,
         string size,
         string color,
-        double price
+        double price,
+        string thumbnail
     )
     {
         this.Title = title;
@@ -27,6 +29,7 @@ public class CreateProductDto
         this.Size = size;
         this.Color = color;
         this.Price = price;
+        this.Thumbnail = thumbnail;
     }
 }
 
@@ -84,7 +87,8 @@ public class ProductController : ControllerBase
                 dto.Category,
                 dto.Size,
                 dto.Color,
-                dto.Price
+                dto.Price,
+                dto.Thumbnail
             );
             return Ok(product);
         }
@@ -123,7 +127,8 @@ public class ProductController : ControllerBase
                 dto.Category,
                 dto.Size,
                 dto.Color,
-                dto.Price
+                dto.Price,
+                dto.Thumbnail
             );
             return Ok("Product " + dto.Title + " updated");
         }

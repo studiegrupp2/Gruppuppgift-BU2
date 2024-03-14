@@ -9,6 +9,7 @@ public class Product
     public string Size { get; set; }
     public string Color { get; set; }
     public double Price { get; set; }
+    public string Thumbnail { get; set; }
     
 
     public List<double> ratingList { get; set; } = new List<double>();
@@ -28,7 +29,8 @@ public class Product
         string category,
         string size,
         string color,
-        double price
+        double price,
+        string thumbnail
     )
     {
         this.Title = title;
@@ -39,6 +41,7 @@ public class Product
         this.Price = price;
         this.ratingList = ratingList;
         this.Reviews = Reviews;
+        this.Thumbnail = thumbnail;
     }
 }
 

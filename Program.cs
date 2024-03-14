@@ -18,10 +18,11 @@ public class Program
                 name: MyAllowSpecificOrigins,
                 policy =>
                 {
-                    policy.WithOrigins("http://localhost:3000", "http://localhost:5000");
+                    policy.WithOrigins("http://localhost:3000", "http://localhost:5000").AllowAnyHeader().AllowAnyMethod();
                 }
             );
         });
+        
         builder.Services.AddDbContext<ApplicationContext>(options =>
             options.UseNpgsql(
                 "Host=localhost;Database=Ecommerce;Username=postgres;Password=password"
