@@ -5,7 +5,6 @@ namespace Gruppuppgift_BU2;
 public class User : IdentityUser
 {
     public List<CartItem> Cart { get; set; } = new List<CartItem>();
-   // public List<PurchaseHistoryItem> History {get; set; }
     public List<PurchasedItem> PurchaseHistory { get; set; } = new List<PurchasedItem>();
     public List<Order> OrderHistory { get; set; } = new List<Order>();
     public User() { }
@@ -53,7 +52,7 @@ public class PurchasedItem
         this.Quantity = cartItem.Quantity;
         this.ProductTitle = cartItem.Product.Title;
         this.ProductPrice = cartItem.Product.Price;
-       // this.TotalPrice();
+
     }
 }
 
@@ -67,7 +66,6 @@ public class Order
     {
         double sum = 0;
         foreach(PurchasedItem item in Items) {
-            // double productPrice = item.TotalPrice();
             sum += item.TotalPrice();
         }
 

@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 
 namespace Gruppuppgift_BU2;
 
-//Kod för att DateTime ska funka
 public static class MyModuleInitializer
 {
     [ModuleInitializer]

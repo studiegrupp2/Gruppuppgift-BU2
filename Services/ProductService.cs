@@ -107,7 +107,7 @@ public class ProductService
         return _review;
     }
 
-     public Rating AddRating(int productId, double ratingValue)
+    public Rating AddRating(int productId, double ratingValue)
     {
         Product? product = context.Products.Find(productId);
         if (product == null)
@@ -138,7 +138,7 @@ public class ProductService
         {
             throw new ArgumentException("User not found");
         }
-        int quantity = 0;
+        
         List<CartItem> cartList = context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
         if (cartList.Any(item => item.Product.Id == productId))
         {
@@ -159,12 +159,10 @@ public class ProductService
     public CartItem? RemoveProductFromCart(int productId, string userId)
     {
         User? user = context.Users.Find(userId);
-        //List<CartItem> Cart = user.Cart.ToList();
 
         List<CartItem> Cart = context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
         CartItem? product = Cart.Find(item => item.Product.Id == productId);
 
-        //List<CartItem> cartList = context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
         if (product == null)
         {
             throw new ArgumentException("product not found");
@@ -196,18 +194,6 @@ public class ProductService
         
         List<CartItem> cartItems = context.CartItems.Include(cartItem => cartItem.Product).Where(u => u.User.Id == userId).ToList();
 
-        // double TotalPrice()
-        // {
-        //     double sum = 0;
-        //     foreach (CartItem item in cartItems)
-        //     {
-        //        // double productPrice = item.TotalPrice(); //denna och nedan rad kan slås ihop
-        //         sum += item.TotalPrice();
-        //     }
-
-        //     return sum;
-        // }
-
         return cartItems;
     }
 
@@ -224,7 +210,7 @@ public class ProductService
         double sum = 0;
             foreach (CartItem item in cartItems)
             {
-                double productPrice = item.TotalPrice(); //denna och nedan rad kan slås ihop
+                double productPrice = item.TotalPrice(); 
                 sum += productPrice;
             }
 
@@ -255,7 +241,7 @@ public class ProductService
         context.SaveChanges();
         if (cartHistory == null || cartHistory.Count < 1)
         {
-            throw new ArgumentException("Cart Empty");
+            return cartHistory = [];
         }
         
         return cartHistory;

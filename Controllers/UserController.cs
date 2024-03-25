@@ -186,7 +186,8 @@ public class CustomerController : ControllerBase
     {
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         double Total = productService.GetCartItemsTotalPrice(userId);
-        return Ok(
+        try {
+            return Ok(
             new
             {
                 cart = productService
@@ -196,6 +197,10 @@ public class CustomerController : ControllerBase
                 Total
             }
         );
+        }
+        catch(ArgumentException){
+            return BadRequest("No items in cart");
+        }  
     }
 
     [HttpPut("product/cart/buy")]
